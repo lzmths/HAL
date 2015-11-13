@@ -20,6 +20,7 @@ OpenNI2Driver::OpenNI2Driver(
         bool                    bCaptureDepth,
         bool                    bCaptureIR,
         bool                    bAlignDepth,
+        int                     nExposure,
         const std::string&      dev_sn,
         const std::string&      scmod
     ) 
@@ -118,6 +119,11 @@ OpenNI2Driver::OpenNI2Driver(
     m_colorVideoMode.setFps( nFPS );
     m_colorVideoMode.setPixelFormat( openni::PIXEL_FORMAT_RGB888 );
     m_colorStream.setVideoMode( m_colorVideoMode );
+    if( nExposure > 0 ) {
+      m_colorStream.setAutoExposureEnabled( false );
+      m_colorStream.setExposure( nExposure );
+      m_colorStream.setGain( 100 );
+    }
 
     rc = m_colorStream.start();
     if (rc != openni::STATUS_OK) {

@@ -27,6 +27,7 @@ class OpenNI2Driver : public CameraDriverInterface
                 bool                    bCaptureDepth,
                 bool                    bCaptureIR,
                 bool                    bAlignDepth,
+                int                     nExposure,
                 const std::string&      sn,
                 const std::string&      scmod);
 
