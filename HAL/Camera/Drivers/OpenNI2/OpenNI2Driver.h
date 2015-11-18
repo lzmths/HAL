@@ -10,8 +10,7 @@
 #include <calibu/cam/stereo_rectify.h>
 
 
-#include "OniSampleUtilities.h"
-#include "OpenNI.h"
+#include <OpenNI.h>
 #include "imageintrincs.h"
 #include "SE3.h"
 
@@ -28,6 +27,7 @@ class OpenNI2Driver : public CameraDriverInterface
                 bool                    bCaptureIR,
                 bool                    bAlignDepth,
                 int                     nExposure,
+                int                     nGain,
                 const std::string&      sn,
                 const std::string&      scmod);
 
@@ -75,6 +75,8 @@ class OpenNI2Driver : public CameraDriverInterface
         std::vector<openni::VideoStream*>    m_streams;
         std::string                          m_dev_sn;
         std::string                          m_sCameraModel;
+        int                                  m_exposure;
+        int                                  m_gain;
 };
 
 }

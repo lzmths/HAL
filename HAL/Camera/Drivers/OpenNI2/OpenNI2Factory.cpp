@@ -17,6 +17,8 @@ public:
             {"depth", "true", "Capture depth image."},
             {"ir", "false", "Capture infrared image."},
             {"hw_align", "false", "Align depth with RGB in hardware"},
+            {"exposure", "0", "Exposure value, 0 for auto-exposure"},
+            {"gain", "0", "Camera gain"},
             {"cmod", "false", "Camera model for software aligning depth with RGB."},
 	    {"sn", "", "Open a particular S/N (first available otherwise)"},
         };
@@ -30,11 +32,14 @@ public:
         bool bDepth         = uri.properties.Get("depth", true);
         bool bIR            = uri.properties.Get("ir", false);
         bool bAlign         = uri.properties.Get("hw_align", false);
+        int nExposure       = uri.properties.Get("exposure", 0);
+        int nGain           = uri.properties.Get("gain", 0);
         std::string scmod   = uri.properties.Get<std::string>("cmod", "");
         std::string dev_sn = uri.properties.Get<std::string>("sn","");
 
         OpenNI2Driver* pDriver = new OpenNI2Driver(
-                    Dims.x, Dims.y, nFPS, bRGB, bDepth, bIR, bAlign, dev_sn, scmod
+                    Dims.x, Dims.y, nFPS, bRGB, bDepth, bIR, bAlign,
+                    nExposure, nGain, dev_sn, scmod
                     );
         return std::shared_ptr<CameraDriverInterface>( pDriver );
     }

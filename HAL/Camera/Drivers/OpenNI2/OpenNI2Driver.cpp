@@ -21,6 +21,7 @@ OpenNI2Driver::OpenNI2Driver(
         bool                    bCaptureIR,
         bool                    bAlignDepth,
         int                     nExposure,
+        int                     nGain,
         const std::string&      dev_sn,
         const std::string&      scmod
     ) 
@@ -29,6 +30,8 @@ OpenNI2Driver::OpenNI2Driver(
   m_dev_sn = dev_sn;
   m_bHardwareAlign = bAlignDepth;
   m_sCameraModel = scmod;
+  m_exposure = nExposure;
+  m_gain = nGain;
 
   if (m_bHardwareAlign && (m_sCameraModel.size() > 0))
     {
@@ -119,13 +122,21 @@ OpenNI2Driver::OpenNI2Driver(
     m_colorVideoMode.setFps( nFPS );
     m_colorVideoMode.setPixelFormat( openni::PIXEL_FORMAT_RGB888 );
     m_colorStream.setVideoMode( m_colorVideoMode );
-    if( nExposure > 0 ) {
-      m_colorStream.setAutoExposureEnabled( false );
-      m_colorStream.setExposure( nExposure );
-      m_colorStream.setGain( 100 );
+
+    if ( m_exposure > 0) {
+      m_colorStream.getCameraSettings()->setAutoExposureEnabled( false );
+      m_colorStream.getCameraSettings()->setAutoWhiteBalanceEnabled( false );
+      m_colorStream.getCameraSettings()->setExposure( m_exposure );
+      m_colorStream.getCameraSettings()->setGain( m_gain );
+    }
+    else
+    {
+      m_colorStream.getCameraSettings()->setAutoExposureEnabled( true );
+      m_colorStream.getCameraSettings()->setAutoWhiteBalanceEnabled( true );
     }
 
     rc = m_colorStream.start();
+
     if (rc != openni::STATUS_OK) {
       printf("OpenNI2Driver: Couldn't start color stream:\n%s\n", openni::OpenNI::getExtendedError());
       m_colorStream.destroy();
@@ -359,6 +370,18 @@ bool OpenNI2Driver::Capture( hal::CameraMsg& vImages )
     im->set_type( hal::PB_UNSIGNED_BYTE );
     im->set_format( hal::PB_RGB );
     im->set_data( m_colorFrame.getData(), m_colorFrame.getDataSize() );
+
+    if ( m_exposure > 0) {
+      m_colorStream.getCameraSettings()->setAutoExposureEnabled( false );
+      m_colorStream.getCameraSettings()->setAutoWhiteBalanceEnabled( false );
+      m_colorStream.getCameraSettings()->setExposure( m_exposure );
+      m_colorStream.getCameraSettings()->setGain( m_gain );
+    }
+    else
+    {
+      m_colorStream.getCameraSettings()->setAutoExposureEnabled( true );
+      m_colorStream.getCameraSettings()->setAutoWhiteBalanceEnabled( true );
+    }
   }
 
   if( m_depthStream.isValid() ){

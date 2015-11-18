@@ -235,6 +235,7 @@ list( REMOVE_ITEM HAL_LIBS "optimized" )
 set(HAL_INCLUDES
     ${LIB_INC_DIR}
     ${USER_INC}
+    ${INTERNAL_INC}
     CACHE STRING "HAL required includes" )
 
 
